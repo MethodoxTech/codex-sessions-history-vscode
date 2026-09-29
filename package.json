@@ -1,0 +1,402 @@
+{
+	"name": "codex-sessions-history",
+	"displayName": "Codex Sessions History",
+	"description": "Browse, search and export your Codex session history. Fully local, no telemetry, no paywall.",
+	"version": "0.1.0",
+	"publisher": "methodox",
+	"license": "MIT",
+	"author": "Charles Zhang",
+	"repository": "github:MethodoxTech/codex-sessions-history-vscode",
+	"icon": "media/icon.png",
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": [
+		"Other",
+		"Visualization"
+	],
+	"keywords": [
+		"codex",
+		"openai",
+		"session history",
+		"conversation",
+		"transcript",
+		"AI"
+	],
+	"activationEvents": [],
+	"main": "./out/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "codexSessions",
+					"title": "Codex Sessions",
+					"icon": "media/activity-icon.svg"
+				}
+			]
+		},
+		"views": {
+			"codexSessions": [
+				{
+					"id": "codexSessions.tree",
+					"name": "Sessions",
+					"icon": "media/activity-icon.svg",
+					"when": "config.codexSessions.showInActivityBar"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "codexSessions.tree",
+				"contents": "No sessions found. Configure the session home directories or run your coding agent, then refresh.\n[Open Settings](command:codexSessions.openSettings)\n[Refresh](command:codexSessions.refresh)"
+			}
+		],
+		"commands": [
+			{
+				"command": "codexSessions.openBrowser",
+				"title": "Open Session Browser",
+				"category": "Codex Sessions",
+				"icon": "$(window)"
+			},
+			{
+				"command": "codexSessions.refresh",
+				"title": "Refresh",
+				"category": "Codex Sessions",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "codexSessions.rescan",
+				"title": "Rescan All Sessions (Clear Cache)",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.openSession",
+				"title": "Open Session",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.search",
+				"title": "Search Sessions",
+				"category": "Codex Sessions",
+				"icon": "$(search)"
+			},
+			{
+				"command": "codexSessions.showStats",
+				"title": "Show Statistics",
+				"category": "Codex Sessions",
+				"icon": "$(graph)"
+			},
+			{
+				"command": "codexSessions.resume",
+				"title": "Resume Session in Terminal",
+				"category": "Codex Sessions",
+				"icon": "$(debug-continue)"
+			},
+			{
+				"command": "codexSessions.exportMarkdown",
+				"title": "Export Session as Markdown",
+				"category": "Codex Sessions",
+				"icon": "$(markdown)"
+			},
+			{
+				"command": "codexSessions.exportRange",
+				"title": "Export Sessions in Date Range as Markdown",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.toggleBookmark",
+				"title": "Toggle Bookmark",
+				"category": "Codex Sessions",
+				"icon": "$(star-empty)"
+			},
+			{
+				"command": "codexSessions.removeBookmark",
+				"title": "Remove Bookmark",
+				"category": "Codex Sessions",
+				"icon": "$(star-full)"
+			},
+			{
+				"command": "codexSessions.toggleBookmarkFilter",
+				"title": "Show Bookmarked Sessions Only",
+				"category": "Codex Sessions",
+				"icon": "$(star-empty)"
+			},
+			{
+				"command": "codexSessions.clearBookmarkFilter",
+				"title": "Show All Sessions",
+				"category": "Codex Sessions",
+				"icon": "$(star-full)"
+			},
+			{
+				"command": "codexSessions.groupByDate",
+				"title": "Group Sessions by Date",
+				"category": "Codex Sessions",
+				"icon": "$(calendar)"
+			},
+			{
+				"command": "codexSessions.groupByProject",
+				"title": "Group Sessions by Project",
+				"category": "Codex Sessions",
+				"icon": "$(folder)"
+			},
+			{
+				"command": "codexSessions.copyTitle",
+				"title": "Copy Session Title",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.copySessionId",
+				"title": "Copy Session ID",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.revealTranscript",
+				"title": "Reveal Transcript File",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.openTranscript",
+				"title": "Open Raw Transcript (.jsonl)",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.openProjectFolder",
+				"title": "Open Project Folder",
+				"category": "Codex Sessions"
+			},
+			{
+				"command": "codexSessions.openSettings",
+				"title": "Open Settings",
+				"category": "Codex Sessions"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "codexSessions.openSession",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.toggleBookmark",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.removeBookmark",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.clearBookmarkFilter",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.groupByDate",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.groupByProject",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.copySessionId",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.revealTranscript",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.openTranscript",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.openProjectFolder",
+					"when": "false"
+				},
+				{
+					"command": "codexSessions.copyTitle",
+					"when": "false"
+				}
+			],
+			"view/title": [
+				{
+					"command": "codexSessions.search",
+					"when": "view == codexSessions.tree",
+					"group": "navigation@1"
+				},
+				{
+					"command": "codexSessions.toggleBookmarkFilter",
+					"when": "view == codexSessions.tree && !codexSessions.bookmarksOnly",
+					"group": "navigation@2"
+				},
+				{
+					"command": "codexSessions.clearBookmarkFilter",
+					"when": "view == codexSessions.tree && codexSessions.bookmarksOnly",
+					"group": "navigation@2"
+				},
+				{
+					"command": "codexSessions.openBrowser",
+					"when": "view == codexSessions.tree",
+					"group": "navigation@3"
+				},
+				{
+					"command": "codexSessions.refresh",
+					"when": "view == codexSessions.tree",
+					"group": "navigation@4"
+				},
+				{
+					"command": "codexSessions.groupByProject",
+					"when": "view == codexSessions.tree && codexSessions.groupBy == date",
+					"group": "1_group@1"
+				},
+				{
+					"command": "codexSessions.groupByDate",
+					"when": "view == codexSessions.tree && codexSessions.groupBy != date",
+					"group": "1_group@1"
+				},
+				{
+					"command": "codexSessions.showStats",
+					"when": "view == codexSessions.tree",
+					"group": "2_tools@1"
+				},
+				{
+					"command": "codexSessions.exportRange",
+					"when": "view == codexSessions.tree",
+					"group": "2_tools@2"
+				},
+				{
+					"command": "codexSessions.rescan",
+					"when": "view == codexSessions.tree",
+					"group": "3_maintenance@1"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "codexSessions.toggleBookmark",
+					"when": "view == codexSessions.tree && viewItem == session.plain",
+					"group": "inline@1"
+				},
+				{
+					"command": "codexSessions.removeBookmark",
+					"when": "view == codexSessions.tree && viewItem == session.bookmarked",
+					"group": "inline@1"
+				},
+				{
+					"command": "codexSessions.resume",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "1_run@1"
+				},
+				{
+					"command": "codexSessions.exportMarkdown",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "2_export@1"
+				},
+				{
+					"command": "codexSessions.copyTitle",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "3_copy@1"
+				},
+				{
+					"command": "codexSessions.copySessionId",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "3_copy@2"
+				},
+				{
+					"command": "codexSessions.openTranscript",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "4_open@1"
+				},
+				{
+					"command": "codexSessions.revealTranscript",
+					"when": "view == codexSessions.tree && viewItem =~ /^session/",
+					"group": "4_open@2"
+				},
+				{
+					"command": "codexSessions.openProjectFolder",
+					"when": "view == codexSessions.tree && viewItem == project",
+					"group": "4_open@1"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Codex Sessions History",
+			"properties": {
+				"codexSessions.showInActivityBar": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Show the Codex Sessions icon in the activity bar. The browser is also available from the command palette."
+				},
+				"codexSessions.groupBy": {
+					"type": "string",
+					"enum": [
+						"date",
+						"project"
+					],
+					"default": "date",
+					"description": "How sessions are grouped in the Sessions tree view."
+				},
+				"codexSessions.showThinking": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show collapsible thinking blocks in the conversation view."
+				},
+				"codexSessions.showToolCalls": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show collapsible tool calls in the conversation view."
+				},
+				"codexSessions.showSidechains": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show subagent (sidechain) messages in the conversation view."
+				},
+				"codexSessions.toolOutputLimit": {
+					"type": "number",
+					"default": 4000,
+					"minimum": 200,
+					"maximum": 100000,
+					"description": "Maximum number of characters of tool output kept per tool call. Longer output is truncated."
+				},
+				"codexSessions.pageSize": {
+					"type": "number",
+					"default": 60,
+					"minimum": 10,
+					"maximum": 1000,
+					"description": "Number of messages rendered per batch in the conversation view. Lower values keep very long sessions responsive."
+				},
+				"codexSessions.deepSearchIncludesToolCalls": {
+					"type": "boolean",
+					"default": false,
+					"description": "Include tool inputs and outputs when running a deep search across all sessions."
+				},
+				"codexSessions.autoRefresh": {
+					"type": "boolean",
+					"default": true,
+					"description": "Watch session transcripts and refresh automatically when they change."
+				},
+				"codexSessions.codexHome": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Codex home containing `sessions` and `archived_sessions`. Empty uses `$CODEX_HOME`, otherwise `~/.codex`."
+				},
+				"codexSessions.codexResumeCommand": {
+					"type": "string",
+					"default": "codex resume {sessionId}",
+					"description": "Codex resume command. Supports {sessionId} and {projectPath}."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"test": "npm run compile && node --test \"out/test/*.test.js\"",
+		"icon": "node scripts/generate-icon.js",
+		"package": "vsce package --no-dependencies"
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"@types/vscode": "^1.85.0",
+		"typescript": "^5.3.0"
+	}
+}
