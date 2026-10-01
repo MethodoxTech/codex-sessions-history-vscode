@@ -27,6 +27,16 @@ export function activate(context: vscode.ExtensionContext): void {
 	);
 	const bookmarks = new BookmarkStore(context.globalState);
 	const tree = new SessionTreeProvider(store, bookmarks);
+	context.subscriptions.push(tree);
+
+	// Rescan once; the tree and the browser both follow the store's updates.
+	const rescan = async (): Promise<void> => {
+		if (BrowserPanel.current) {
+			await BrowserPanel.current.refresh();
+		} else {
+			await store.load();
+		}
+	};
 
 	// The tree is contributed behind a `when` clause on
 	// codexSessions.showInActivityBar, so it can be hidden without uninstalling
@@ -69,13 +79,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	register("codexSessions.refresh", async () => {
 		tree.refresh();
-		await BrowserPanel.current?.refresh();
+		await rescan();
 	});
 
 	register("codexSessions.rescan", async () => {
 		store.clearCache();
 		tree.refresh();
-		await BrowserPanel.current?.refresh();
+		await rescan();
 		void vscode.window.showInformationMessage("Rescanning every transcript.");
 	});
 
@@ -216,7 +226,7 @@ export function activate(context: vscode.ExtensionContext): void {
 				store.configure("", currentCodexHome(), currentAgentFilter());
 				watcher.reconfigure();
 				tree.refresh();
-				await BrowserPanel.current?.refresh();
+				await rescan();
 			} else if (event.affectsConfiguration("codexSessions.groupBy")) {
 				tree.refresh();
 			} else if (event.affectsConfiguration("codexSessions.autoRefresh")) {
@@ -226,8 +236,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	);
 
 	const watcher = new TranscriptWatcher(store, () => {
-		tree.refresh();
-		void BrowserPanel.current?.refresh();
+		void rescan();
 	});
 	context.subscriptions.push(watcher);
 	watcher.reconfigure();
@@ -267,7 +276,7 @@ function resolveSession(target?: SessionMeta | SessionTreeItem): SessionMeta | u
 }
 
 async function pickSession(store: SessionStore, title: string): Promise<SessionMeta | undefined> {
-	const sessions = await store.load();
+	const sessions = store.sessions.length > 0 ? store.sessions : await store.load();
 	if (sessions.length === 0) {
 		void vscode.window.showWarningMessage("No Codex sessions found yet.");
 		return undefined;
